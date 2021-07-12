@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='Orchid' Id='194637B1-AE7D-4C66-9946-D70CA1E9C1FD' UpgradeCode='194637B1-AE7D-4C66-9946-D70CA1E9C1FD'
+    Language='1033' Codepage='1252' Version='1.0.0' Manufacturer='Acme Ltd.'>
+
+    <Package Id='*' Keywords='Installer' Description="Acme's Foobar 1.0 Installer"
+      Comments='Foobar is a registered trademark of Acme Ltd.' Manufacturer='Acme Ltd.'
+      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="Acme's Foobar 1.0 Installation [1]" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='Acme' Name='Acme'>
+          <Directory Id='INSTALLDIR' Name='Orchid'>
+
+            <Component Id='MainExecutable' Guid='B13BE715-5B20-4273-AF7A-71C2B9D8BD87'>
+              <File Id='orchid' Name='Orchid.exe' DiskId='1' Source='$(var.output)/Orchid.exe' KeyPath='yes'/>
+            </Component>
+
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='MainExecutable' />
+    </Feature>
+
+  </Product>
+</Wix>

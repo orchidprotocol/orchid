@@ -24,7 +24,7 @@ include env/target.mk
 signed := 
 
 .PHONY: all
-all: $(output)/$(name).zip
+all: $(output)/$(machine)/$(name).msi
 
 source += $(wildcard $(pwd)/source/*.cpp)
 source += $(wildcard $(pwd)/source/*.rc)
@@ -33,14 +33,14 @@ $(call include,shared/target-win.mk)
 
 include env/output.mk
 
-$(output)/package/$(name)$(exe): $(patsubst %,$(output)/$(machine)/%,$(object) $(linked))
+$(output)/$(machine)/$(name)$(exe): $(patsubst %,$(output)/$(machine)/%,$(object) $(linked))
 	@mkdir -p $(dir $@)
 	@echo [LD] $@
 	@set -o pipefail; $(cxx) $(more/$(machine)) -Wl,-subsystem,windows $(wflags) -o $@ $(filter %.o,$^) $(filter %.a,$^) $(filter %.lib,$^) $(lflags) 2>&1 -Wl,-v | nl
 	@openssl sha256 -r $@
 	@ls -la $@
-signed += $(output)/package/$(name)$(exe)
+signed += $(output)/$(machine)/$(name)$(exe)
 
-$(output)/$(name).zip: $(signed)
+$(output)/$(machine)/$(name).msi: orchid.wixl $(signed)
 	@rm -f $@
-	cd $(output)/package && zip -rXy $(zflags) ../$(name).zip *
+	wixl -v $< -o $@ -D output=$(output)/$(machine)
